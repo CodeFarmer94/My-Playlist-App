@@ -1,0 +1,12 @@
+.TrackList h2 {
+    width: 100%;
+    font-family: monospace,sans-serif;
+    font-weight: normal;
+   
+  }
+  .TrackList-Results{
+    font-family: monospace,sans-serif;
+  }
+  .TracksList-Saved{
+    margin:0;
+  }
