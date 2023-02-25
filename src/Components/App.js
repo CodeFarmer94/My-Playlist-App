@@ -9,11 +9,11 @@ import Spotify from './util/Spotify'
 export class App extends React.Component {
   constructor(props){
     super(props)
-    this.state = {searchResults: [{album: "Hello",
-    artist: "Martin Solveig",
-    id: "1Yk0cQdMLx5RzzFTYwmuld",
-    name: "Hello",
-    uri: "spotify:track:1Yk0cQdMLx5RzzFTYwmuld"
+    this.state = {searchResults: [{album: "Album",
+    artist: "Artist",
+    id: "",
+    name: "Search the Spotify Database and save tracks in a playlist.",
+    uri: ""
 
     }],
                   playlistName: "MyPlaylist",
@@ -28,16 +28,14 @@ export class App extends React.Component {
       this.savePlaylist = this.savePlaylist.bind(this)
       this.search = this.search.bind(this)
       this.updateSearchTerm = this.updateSearchTerm.bind(this)
-      
+      this.savePlaylist = this.savePlaylist.bind(this)
   }
 
   async componentDidMount() {
-    const searchResults = await Spotify.search('adele');
+    const searchResults = await Spotify.search('');
     this.setState({ searchResults });
   }
-  componentDidUpdate(){
-    this.savePlaylist()
-  }
+  
    async search(string){
     const searchResults = await Spotify.search(string);
     this.setState({ searchResults })
@@ -49,6 +47,7 @@ export class App extends React.Component {
   const trackURIs = trackArr.map(track => track.uri);
   const playlistName = this.state.playlistName;
   Spotify.savePlaylist(playlistName, trackURIs);
+  this.setState({playlistTracks:[]})
 }
   updateSearchTerm(string){
     this.setState({term: string })

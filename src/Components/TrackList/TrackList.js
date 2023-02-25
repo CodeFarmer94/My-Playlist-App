@@ -44,7 +44,7 @@ export default class TrackList extends React.Component {
           </div>
         ) : (
           <div className="TrackList-Results">
-            <h2>Results</h2>
+           
             {listOfSearchResults}
           </div>
         )}
