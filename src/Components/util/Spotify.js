@@ -28,11 +28,12 @@ Spotify.getAccessToken = () => {
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
     
     window.location = authUrl;
-  }
+   
+  } 
 };
 Spotify.search = async function(searchTerm) {
     const accessToken = Spotify.getAccessToken();
-   
+    console.log(accessToken)
     const response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -114,5 +115,85 @@ Spotify.search = async function(searchTerm) {
       console.error('Error adding tracks to playlist:', error);
       return;
     }
+  };
+  Spotify.getCurrentUserId = async function() {
+    if (Spotify.userId) {
+      return Promise.resolve(Spotify.userId);
+    }
+    
+    const accessToken = Spotify.getAccessToken();
+    console.log(accessToken)
+    const headers = { Authorization: `Bearer ${accessToken}` };
+  
+    try {
+      const response = await fetch('https://api.spotify.com/v1/me', { headers });
+      if (response.ok) {
+        const data = await response.json();
+        Spotify.userId = data.id;
+        return Promise.resolve(Spotify.userId);
+      } else {
+        throw new Error('Failed to get user ID');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return Promise.reject(error);
+    }
+  };
+  Spotify.getUserPlaylists = async function() {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+  
+    // Get the user ID
+    const userId = await Spotify.getCurrentUserId();
+  
+    let playlists = [];
+  
+    try {
+      const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, { headers });
+  
+      if (response.ok) {
+        const data = await response.json();
+        playlists = data.items.map(playlist => ({
+          id: playlist.id,
+          name: playlist.name,
+        }));
+      } else {
+        throw new Error('Failed to retrieve user playlists');
+      }
+    } catch (error) {
+      console.error('Error fetching user playlists:', error);
+    }
+  
+    return playlists;
+  };
+  Spotify.getPlaylist = async function(id) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+  
+    // Get the user ID
+    const userId = await Spotify.getCurrentUserId();
+  
+    let tracks = [];
+  
+    try {
+      const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${id}/tracks`, { headers });
+  
+      if (response.ok) {
+        const data = await response.json();
+        tracks = data.items.map(item => ({
+          id: item.track.id,
+          name: item.track.name,
+          artist: item.track.artists[0].name,
+          album: item.track.album.name,
+          uri: item.track.uri
+        }));
+      } else {
+        throw new Error('Failed to retrieve playlist tracks');
+      }
+    } catch (error) {
+      console.error('Error fetching playlist tracks:', error);
+    }
+  
+    return tracks;
   };
 export default Spotify;

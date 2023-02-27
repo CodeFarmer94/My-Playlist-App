@@ -4,7 +4,7 @@
     overflow-y: scroll;
     padding: .88rem;
     background-color: rgba(10, 95, 99, 0.7);
-    box-shadow: 0 4px 2px 2px #000000;
+    box-shadow: 0 4px 2px 0px #000000;
     color:rgb(248, 239, 248);
     border-radius:5px;
   }

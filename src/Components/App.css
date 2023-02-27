@@ -51,6 +51,13 @@ h2 {
   gap:2rem;
 }
 
+.box-heading{
+  color:rgb(177, 27, 125);
+  border-bottom: 2px solid white;
+  margin:10px auto;
+  
+}
+
 @media only screen and (max-width: 1020px) {
   .App-playlist {
     align-items: center;

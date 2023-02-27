@@ -10,7 +10,7 @@ export default class SearchResults extends React.Component{
         
    
         return( <div className="SearchResults">
-        
+        <h2 className= "box-heading">Search Results</h2>
         <TrackList
         searchResults = {this.props.searchResults} 
         playlistTracks = {this.props.playlistTracks}

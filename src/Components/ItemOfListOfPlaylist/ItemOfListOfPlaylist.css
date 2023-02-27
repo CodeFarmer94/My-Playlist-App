@@ -1,0 +1,11 @@
+.playlist-name{
+    background-color: rgba(10, 94, 99, 0.449);
+    margin: 10px auto;
+    padding:5px;
+    border-bottom: 1px solid gray;
+    border-radius: 5px;
+
+}
+.playlist-name:hover{
+    background-color: rgba(2, 21, 22, 0.449);
+}
