@@ -3,9 +3,7 @@ import Track from "../Track/Track";
 import "./TrackList.css";
 
 export default class TrackList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  
 
   render() {
     const listOfSavedTracks = this.props.playlistTracks.map((track) => {
