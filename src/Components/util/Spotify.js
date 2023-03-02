@@ -23,7 +23,7 @@ Spotify.getAccessToken = () => {
     return accessToken;
   } else {
     const clientId = 'd34a6d197e1d4570a125bed82c842f74';
-    const redirectUri = "https://subtle-jalebi-53f97e.netlify.app/callback/";
+    const redirectUri = "http://localhost:3000/callback/";
     const scope = 'playlist-modify-public';
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
     
