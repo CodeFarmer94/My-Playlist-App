@@ -36,28 +36,29 @@ export class App extends React.Component {
     this.getListOfPlaylist = this.getListOfPlaylist.bind(this)
     this.getTracksFromId = this.getTracksFromId.bind(this)
   }
-
-  async getTracksFromId(id){
-  const playlistTracks = await  Spotify.getPlaylist(id)
-  this.setState({playlistTracks})
-  }
-
-  async getListOfPlaylist(){
-    const playlistArray = await Spotify.getUserPlaylists()
-    this.setState({playlistArray})
-
-  }
   async componentDidMount() {
-    const searchResults = await Spotify.search(this.state.term);
+
     const playlistsArray = await Spotify.getUserPlaylists()
-    this.setState({ searchResults,playlistsArray})
+    this.setState({ playlistsArray })
   }
 
- 
+
+  async getTracksFromId(id) {
+    const playlistTracks = await Spotify.getPlaylist(id)
+    this.setState({ playlistTracks })
+  }
+
+  async getListOfPlaylist() {
+    const playlistArray = await Spotify.getUserPlaylists()
+    this.setState({ playlistArray })
+
+  }
+
+
+
   async search(string) {
     const searchResults = await Spotify.search(string);
     this.setState({ searchResults })
-    console.log(this.state.playlistsArray)
   }
 
   savePlaylist() {
@@ -108,18 +109,17 @@ export class App extends React.Component {
           <SearchResults
             onAdd={this.addTrack}
             searchResults={this.state.searchResults}
-             playlistTracks={this.state.playlistTracks} />
-          <Playlist 
-          onNameChange={this.updatePlaylistName} 
-          onRemove={this.removeTrack} 
-          playlistName={this.state.playlistName} 
-          playlistTracks=
-            {this.state.playlistTracks} 
-            searchResults={this.state.searchResults} 
+            playlistTracks={this.state.playlistTracks} />
+          <Playlist
+            onNameChange={this.updatePlaylistName}
+            onRemove={this.removeTrack}
+            playlistName={this.state.playlistName}
+            playlistTracks={this.state.playlistTracks}
+            searchResults={this.state.searchResults}
             onSave={this.savePlaylist} />
-          <ListOfPlaylist 
-            playlistArray ={this.state.playlistsArray}
-            getPlaylist = {this.getTracksFromId}/>
+          <ListOfPlaylist
+            playlistArray={this.state.playlistsArray}
+            getPlaylist={this.getTracksFromId} />
         </div>
       </div>
 

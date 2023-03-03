@@ -7,7 +7,7 @@ let accessToken = '';
 
 Spotify.getAccessToken = () => {
   if (accessToken) {
-    return accessToken;
+    return Promise.resolve(accessToken);
   }
 
   const url = window.location.href;
@@ -20,19 +20,31 @@ Spotify.getAccessToken = () => {
     window.setTimeout(() => accessToken = '', expiresIn * 1000);
     // Clear the URL parameters for security reasons
     window.history.pushState('Access Token', null, '/');
-    return accessToken;
+    return Promise.resolve(accessToken);
+
+
+    
   } else {
     const clientId = 'd34a6d197e1d4570a125bed82c842f74';
     const redirectUri = "http://localhost:3000/callback/";
     const scope = 'playlist-modify-public';
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
-    
-    window.location = authUrl;
-   
-  } 
+
+    return new Promise((resolve, reject) => {
+      
+      window.location = authUrl;
+      window.addEventListener('popstate', () => {
+        if (accessToken) {
+          resolve(accessToken);
+        } else {
+          reject(new Error('Failed to obtain access token'));
+        }
+      });
+    });
+  }
 };
 Spotify.search = async function(searchTerm) {
-    const accessToken = Spotify.getAccessToken();
+    const accessToken = await Spotify.getAccessToken();
     console.log(accessToken)
     const response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {
       headers: {
@@ -63,7 +75,7 @@ Spotify.search = async function(searchTerm) {
       return;
     }
   
-    const accessToken = Spotify.getAccessToken();
+    const accessToken = await Spotify.getAccessToken();
     const headers = {Authorization : `Bearer ${accessToken}`};
   
     let userId;
@@ -121,7 +133,7 @@ Spotify.search = async function(searchTerm) {
       return Promise.resolve(Spotify.userId);
     }
     
-    const accessToken = Spotify.getAccessToken();
+    const accessToken = await Spotify.getAccessToken();
     console.log(accessToken)
     const headers = { Authorization: `Bearer ${accessToken}` };
   
@@ -140,7 +152,7 @@ Spotify.search = async function(searchTerm) {
     }
   };
   Spotify.getUserPlaylists = async function() {
-    const accessToken = Spotify.getAccessToken();
+    const accessToken = await Spotify.getAccessToken();
     const headers = { Authorization: `Bearer ${accessToken}` };
   
     // Get the user ID
