@@ -1,6 +1,5 @@
 
 
-
 const Spotify = {};
 
 let accessToken = '';
@@ -9,7 +8,6 @@ Spotify.getAccessToken = () => {
   if (accessToken) {
     return Promise.resolve(accessToken);
   }
-
   const url = window.location.href;
   const tokenMatch = url.match(/access_token=([^&]*)/);
   const expiresMatch = url.match(/expires_in=([^&]*)/);
@@ -20,32 +18,19 @@ Spotify.getAccessToken = () => {
     window.setTimeout(() => accessToken = '', expiresIn * 1000);
     // Clear the URL parameters for security reasons
     window.history.pushState('Access Token', null, '/');
-    return Promise.resolve(accessToken);
-
-
-    
+    localStorage.setItem("accessToken", accessToken); // save accessToken in localStorage
   } else {
     const clientId = 'd34a6d197e1d4570a125bed82c842f74';
     const redirectUri = "http://localhost:3000/callback/";
     const scope = 'playlist-modify-public';
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
-
-    return new Promise((resolve, reject) => {
-      
-      window.location = authUrl;
-      window.addEventListener('popstate', () => {
-        if (accessToken) {
-          resolve(accessToken);
-        } else {
-          reject(new Error('Failed to obtain access token'));
-        }
-      });
-    });
+    window.location = authUrl;
   }
 };
+
 Spotify.search = async function(searchTerm) {
-    const accessToken = await Spotify.getAccessToken();
-    console.log(accessToken)
+  accessToken = localStorage.getItem("accessToken")
+    
     const response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -57,6 +42,7 @@ Spotify.search = async function(searchTerm) {
     }
   
     const jsonResponse = await response.json();
+
     if (!jsonResponse.tracks) {
       return [];
     }
@@ -75,7 +61,7 @@ Spotify.search = async function(searchTerm) {
       return;
     }
   
-    const accessToken = await Spotify.getAccessToken();
+    accessToken = localStorage.getItem("accessToken")
     const headers = {Authorization : `Bearer ${accessToken}`};
   
     let userId;
@@ -133,8 +119,8 @@ Spotify.search = async function(searchTerm) {
       return Promise.resolve(Spotify.userId);
     }
     
-    const accessToken = await Spotify.getAccessToken();
-    console.log(accessToken)
+    accessToken = localStorage.getItem("accessToken")
+   
     const headers = { Authorization: `Bearer ${accessToken}` };
   
     try {
@@ -179,7 +165,7 @@ Spotify.search = async function(searchTerm) {
     return playlists;
   };
   Spotify.getPlaylist = async function(id) {
-    const accessToken = Spotify.getAccessToken();
+    accessToken = localStorage.getItem("accessToken")
     const headers = { Authorization: `Bearer ${accessToken}` };
   
     // Get the user ID

@@ -15,7 +15,6 @@ export default class SearchResults extends React.Component{
         searchResults = {this.props.searchResults} 
         playlistTracks = {this.props.playlistTracks}
         onAdd = {this.props.onAdd} 
-        isRemoval = {false} 
         renderLoc = "SearchResults"/>
 </div>)
        

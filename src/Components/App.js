@@ -17,12 +17,12 @@ export class App extends React.Component {
         id: "example",
         name: "Search the Spotify Database and save tracks in a playlist.",
         uri: ""
-
       }],
       playlistName: "MyPlaylist",
       playlistTracks: [],
-      term: "search",
-      playlistsArray: []
+      term: "",
+      playlistsArray: [],
+      authorize: false
 
     }
 
@@ -36,12 +36,14 @@ export class App extends React.Component {
     this.getListOfPlaylist = this.getListOfPlaylist.bind(this)
     this.getTracksFromId = this.getTracksFromId.bind(this)
   }
-  async componentDidMount() {
 
+
+  async componentDidMount() {
+    Spotify.getAccessToken()
     const playlistsArray = await Spotify.getUserPlaylists()
     this.setState({ playlistsArray })
   }
-
+  
 
   async getTracksFromId(id) {
     const playlistTracks = await Spotify.getPlaylist(id)
